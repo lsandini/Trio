@@ -198,7 +198,7 @@ There is an additional identifier, but it does not need the App Group added to i
 
 > Manual fallback only: rerunning **2. Add Identifiers** or **3. Create Certificates** now enables this capability automatically for the `Trio` identifier.
 
-The `Trio` identifier requires the **Time Sensitive Notifications** capability to be enabled manually. This is only required for the `Trio` identifier, not the others. You can do this at the same time you add the `Trio App Group` to the `Trio` identifier - just check the box before you Save.
+If your `Trio` identifier was created before this automation was added and you have not rerun the updated workflows yet, enable the **Time Sensitive Notifications** capability manually. This is only required for the `Trio` identifier, not the others. You can do this at the same time you add the `Trio App Group` to the `Trio` identifier - just check the box before you Save.
 
 1. Go to [Certificates, Identifiers & Profiles](https://developer.apple.com/account/resources/identifiers/list) on the Apple developer site.
 1. Click on the `Trio` **IDENTIFIER** row (`org.nightscout.TEAMID.trio`, substituting your team id for `TEAMID`).
