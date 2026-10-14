@@ -49,6 +49,16 @@ xcconfig = parse_xcconfig_file(xcconfig_path)
 # Access BUNDLE_IDENTIFIER from the xcconfig file after replacing $(DEVELOPMENT_TEAM) with ENV["TEAMID"]
 ENV["BUNDLE_ID"] = xcconfig["BUNDLE_IDENTIFIER"]
 
+def ensure_bundle_identifier_capability(identifier, capability)
+  bundle_id = Spaceship::ConnectAPI::BundleId.find(identifier)
+  UI.user_error!("Could not find bundle identifier #{identifier}") unless bundle_id
+
+  existing = bundle_id.get_capabilities.map(&:capability_type)
+  return if existing.include?(capability)
+
+  bundle_id.create_capability(capability)
+end
+
 # limit lane names to letters and underscores
 platform :ios do
   desc "Build Trio"
@@ -183,7 +193,8 @@ platform :ios do
       Spaceship::ConnectAPI::BundleIdCapability::Type::APP_GROUPS,
       Spaceship::ConnectAPI::BundleIdCapability::Type::HEALTHKIT,
       Spaceship::ConnectAPI::BundleIdCapability::Type::NFC_TAG_READING,
-      Spaceship::ConnectAPI::BundleIdCapability::Type::PUSH_NOTIFICATIONS
+      Spaceship::ConnectAPI::BundleIdCapability::Type::PUSH_NOTIFICATIONS,
+      Spaceship::ConnectAPI::BundleIdCapability::Type::USERNOTIFICATIONS_TIMESENSITIVE
     ])
 
     configure_bundle_id("Trio Watch Complication", "#{BUNDLE_ID}.watchkitapp.TrioWatchComplication", [
@@ -209,6 +220,11 @@ platform :ios do
       key_id: "#{FASTLANE_KEY_ID}",
       issuer_id: "#{FASTLANE_ISSUER_ID}",
       key_content: "#{FASTLANE_KEY}"
+    )
+
+    ensure_bundle_identifier_capability(
+      BUNDLE_ID,
+      Spaceship::ConnectAPI::BundleIdCapability::Type::USERNOTIFICATIONS_TIMESENSITIVE
     )
     
     match(
